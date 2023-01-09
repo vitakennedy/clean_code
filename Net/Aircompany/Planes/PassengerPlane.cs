@@ -4,7 +4,7 @@ namespace Aircompany.Planes
 {
     public class PassengerPlane : Plane
     {
-        public int _passengersCapacity;
+        int _passengersCapacity;
 
         public PassengerPlane(string model, int maxSpeed, int maxFlightDistance, int maxLoadCapacity, int passengersCapacity)
             :base(model, maxSpeed, maxFlightDistance, maxLoadCapacity)
@@ -28,7 +28,7 @@ namespace Aircompany.Planes
             return hashCode;
         }
 
-        public int PassengersCapacityIs()
+        public int GetPassengersCapacity()
         {
             return _passengersCapacity;
         }
