@@ -44,7 +44,7 @@ namespace Aircompany
         public PassengerPlane GetPassengerPlaneWithMaxPassengersCapacity()
         {
             List<PassengerPlane> passengerPlanes = GetPassengersPlanes();
-            return passengerPlanes.Aggregate((w, x) => w.PassengersCapacityIs() > x.PassengersCapacityIs() ? w : x);             
+            return passengerPlanes.Aggregate((w, x) => w.GetPassengersCapacity() > x.GetPassengersCapacity() ? w : x);             
         }
 
         public List<MilitaryPlane> GetTransportMilitaryPlanes()
@@ -54,7 +54,7 @@ namespace Aircompany
             for (int i = 0; i < militaryPlanes.Count; i++)
             {
                 MilitaryPlane plane = militaryPlanes[i];
-                if (plane.PlaneTypeIs() == MilitaryType.TRANSPORT)
+                if (plane.GetPlaneType() == MilitaryType.TRANSPORT)
                 {
                     transportMilitaryPlanes.Add(plane);
                 }
@@ -63,21 +63,52 @@ namespace Aircompany
             return transportMilitaryPlanes;
         }
 
-        public Airport SortByMaxDistance()
+        public bool HasMilitaryTransportPlane(List<MilitaryPlane>  transportMilitaryPlanes)
         {
-            return new Airport(Planes.OrderBy(w => w.MAXFlightDistance()));
+            bool hasMilitaryTransportPlane = false;
+            foreach (MilitaryPlane militaryPlane in transportMilitaryPlanes)
+            {
+                if ((militaryPlane.GetPlaneType() == MilitaryType.TRANSPORT))
+                {
+                    hasMilitaryTransportPlane = true;
+                }
+            }
+
+            return hasMilitaryTransportPlane;
         }
 
-        public Airport SortByMaxSpeed()
+        public Airport GetAirportSortedByMaxDistance()
         {
-            return new Airport(Planes.OrderBy(w => w.GetMS()));
+            return new Airport(Planes.OrderBy(w => w.GetMaxFlightDistance()));
         }
 
-        public Airport SortByMaxLoadCapacity()
+        public Airport GetAirportSortedByMaxSpeed()
         {
-            return new Airport(Planes.OrderBy(w => w.MAXLoadCapacity()));
+            return new Airport(Planes.OrderBy(w => w.GetMaxSpeed()));
         }
 
+        public Airport GetAirportSortedByMaxLoadCapacity()
+        {
+            return new Airport(Planes.OrderBy(w => w.GetMaxLoadCapacity()));
+        }
+
+        public bool ArePlanesSortedCorrectlyByMaxLoadCapacity(Airport airport)
+        {
+            var sortedAirport = airport.GetAirportSortedByMaxLoadCapacity();
+            List<Plane> planesSortedByMaxLoadCapacity = sortedAirport.GetPlanes().ToList();
+            bool nextPlaneMaxLoadCapacityIsHigherThanCurrent = true;
+            for (int i = 0; i < planesSortedByMaxLoadCapacity.Count - 1; i++)
+            {
+                Plane currentPlane = planesSortedByMaxLoadCapacity[i];
+                Plane nextPlane = planesSortedByMaxLoadCapacity[i + 1];
+                if (currentPlane.GetMaxLoadCapacity() > nextPlane.GetMaxLoadCapacity())
+                {
+                    nextPlaneMaxLoadCapacityIsHigherThanCurrent = false;
+                }
+            }
+
+            return nextPlaneMaxLoadCapacityIsHigherThanCurrent;
+        }
 
         public IEnumerable<Plane> GetPlanes()
         {
